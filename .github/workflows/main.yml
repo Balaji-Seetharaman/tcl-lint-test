@@ -1,0 +1,17 @@
+name: Self-Hosted Runner Workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Print Hello World
+      run: echo "Hello World"
