@@ -3,7 +3,8 @@ name: Self-Hosted Runner Workflow
 on:
   push:
     branches:
-      - master
+      - main
+  workflow_dispatch: 
 
 jobs:
   build:
