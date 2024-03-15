@@ -25,5 +25,6 @@ jobs:
     - name: Run Tclint on changed files
       run: |
         while IFS= read -r file; do
+          echo "$file"
           tclint "$file" --ignore "trailing-whitespace,spacing,indent,line-length,blank-lines"
         done < changed_files.txt
