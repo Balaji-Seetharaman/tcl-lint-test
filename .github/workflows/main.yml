@@ -20,8 +20,10 @@ jobs:
     - name: Run Tclint
       run: |
         output=$(tclint test.tcl --ignore "trailing-whitespace,spacing,indent,line-length,blank-lines")
+        echo "Tclint output:"
+        echo "$output"
         if [ -n "$output" ]; then
-          echo "Tclint found issues:"
+          echo "Tclint found issues."
           echo "$output"
           exit 1
         else
