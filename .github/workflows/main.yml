@@ -19,9 +19,7 @@ jobs:
       id: changed-files
       run: |
        if [ "${{ github.event_name }}" = "pull_request" ]; then
-          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} > changed_files.txt
-        else
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+          git diff --name-only  > changed_files.txt
         fi
 
     - name: Run Tclint on changed files
