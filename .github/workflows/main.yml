@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: 
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,6 +16,18 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      
-    - name: Run Tclint
-      run: tclint test.tcl --ignore "trailing-whitespace,spacing,indent,line-length,blank-lines"
+
+    - name: Determine changed files
+      id: changed-files
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          git diff --name-only ${{ github.base_ref }}..${{ github.head_ref }} > changed_files.txt
+        else
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+        fi
+
+    - name: Run Tclint on changed files
+      run: |
+        while IFS= read -r file; do
+          tclint "$file" --ignore "trailing-whitespace,spacing,indent,line-length,blank-lines"
+        done < changed_files.txt
