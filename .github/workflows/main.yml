@@ -19,7 +19,7 @@ jobs:
       id: changed-files
       run: |
         if [ "${{ github.event_name }}" = "pull_request" ]; then
-          base_branch=$(jq -r '.pull_request.base.ref' "$GITHUB_EVENT_PATH")
+          base_branch=$(echo "${{ github.event }}" | grep -oP '(?<="base":{"ref":")[^"]*')
           git fetch origin "$base_branch":"$base_branch"
           git diff --name-only "$base_branch...${{ github.event.pull_request.head.ref }}" > changed_files.txt
         else
