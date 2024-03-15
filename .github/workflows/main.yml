@@ -18,10 +18,13 @@ jobs:
     - name: Determine changed files
       id: changed-files
       run: |
-       if [ "${{ github.event_name }}" = "pull_request" ]; then
-          git diff --name-only  > changed_files.txt
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          base_branch=$(jq -r '.pull_request.base.ref' "$GITHUB_EVENT_PATH")
+          git fetch origin "$base_branch":"$base_branch"
+          git diff --name-only "$base_branch...${{ github.event.pull_request.head.ref }}" > changed_files.txt
+        else
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
         fi
-
     - name: Run Tclint on changed files
       run: |
         while IFS= read -r file; do
