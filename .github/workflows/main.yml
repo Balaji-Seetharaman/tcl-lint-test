@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch: 
 
 jobs:
@@ -14,5 +17,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       
-    - name: Print Hello World
-      run: echo "Hello World"
+    - name: Run Tclint
+      run: |
+        output=$(tclint test.tcl --ignore "trailing-whitespace,spacing,indent,line-length,blank-lines")
+        if [ -n "$output" ]; then
+          echo "Tclint found issues:"
+          echo "$output"
+          exit 1
+        else
+          echo "Tclint passed."
+        fi
